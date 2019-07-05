@@ -17,10 +17,18 @@
                         <input class="layui-input" name="apiName" id="apiName" autocomplete="off" placeholder="接口名称" >
                     </div>
                     <div class="layui-inline" style="width: 20%;text-align: left;">
+                        <select name="source" id="source" lay-verify="required"  lay-search="">
+                            <option value="-1">全部分类</option>
+                            {{range $index,$elem := .apiSource}}
+                            <option value="{{$index}}"> {{$elem}}</option>
+                            {{end}}
+                        </select>
+                    </div>
+                    <div class="layui-inline" style="width: 20%;text-align: left;">
                         <select name="status" id="status" lay-verify="required"  lay-search="">
                             <option value="-1">全部状态</option>
                             {{range $index,$elem := .auditStatus}}
-                            <option value="{{$index}}"> {{$elem}}</option>
+                                <option value="{{$index}}"> {{$elem}}</option>
                             {{end}}
                         </select>
                     </div>
@@ -58,7 +66,7 @@
                 ,{field:'api_name',title: '接口名称'}
                 ,{field:'api_url',title: '接口地址'}
                 ,{field:'method',title: '请求方式'}
-                ,{field:'source_name',title: '所属资源'}
+                ,{field:'source_name',title: 'API分类'}
                 ,{field:'status_text',title: '接口状态'}
                 ,{field:'create_time', title: '创建时间'}
                 ,{field:'update_time', title: '修改时间'}
@@ -74,6 +82,7 @@
                 table.reload('listReload', {
                     where: {
                         apiName: $('#apiName').val(),
+                        source:$("#source").val(),
                         status:$("#status").val()
                     }
                 });
@@ -156,9 +165,9 @@
             } else if(obj.event === 'del'){
                 var msg = "";
                 if(data.status==0){
-                    msg = '真的启用【'+data.api_name+'】么';
+                    msg = '真的启用【'+data.api_name+'】吗';
                 }else{
-                    msg = '真的停用【'+data.api_name+'】么';
+                    msg = '真的停用【'+data.api_name+'】吗';
                 }
 
                 layer.confirm(msg, function(){

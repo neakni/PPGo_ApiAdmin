@@ -23,6 +23,7 @@
        <!--  <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a> -->
         <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
         <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="status">启|禁</a>
+       <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
 
     </script>
 </div>
@@ -80,7 +81,7 @@
                    return false;
                 }
 
-                layer.confirm('真的'+acts+'【'+data.login_name+'】账号么', function(index){
+                layer.confirm('真的'+acts+'【'+data.login_name+'】账号吗', function(index){
                     var jsData = {'id':data.id,'status':status}
                     $.post('{{urlfor "AdminController.AjaxDel"}}', jsData, function (out) {
                         if (out.status == 0) {

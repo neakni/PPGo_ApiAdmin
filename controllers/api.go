@@ -27,7 +27,14 @@ var (
 		"正在审核",
 		"审核通过",
 		"未通过"}
-	REQUEST_METHOD = [6]string{"未知", "GET", "POST", "PUT", "PATCH", "DELETE"}
+
+	REQUEST_METHOD         = [6]string{"未知", "GET", "POST", "PUT", "PATCH", "DELETE"}
+	REQUEST_METHOD_DISPLAY = []string{"<span class='layui-badge layui-bg-black'>未知</span>",
+		"<span class='layui-badge layui-bg-green'>GET</span>",
+		"<span class='layui-badge layui-bg-blue'>POST</span>",
+		"<span class='layui-badge layui-bg-orange'>PUT</span>",
+		"<span class='layui-badge layui-bg-blue'>PATCH</span>",
+		"<span class='layui-badge layui-bg-red'>DELETE</span>"}
 )
 
 type ApiController struct {
@@ -37,6 +44,13 @@ type ApiController struct {
 func (self *ApiController) List() {
 	self.Data["pageTitle"] = "API接口"
 	self.Data["ApiCss"] = true
+	//获取分组
+	sourceList := sourceLists()
+	sourceSelect := make(map[int]string)
+	for _, item := range sourceList {
+		sourceSelect[item.Id] = item.SourceName
+	}
+	self.Data["apiSource"] = sourceSelect
 	self.Data["auditStatus"] = AUDIT_STATUS_TEXT
 	self.display()
 }
@@ -54,6 +68,7 @@ func (self *ApiController) Table() {
 
 	apiName := strings.TrimSpace(self.GetString("apiName"))
 	status, _ := self.GetInt("status", -1)
+	source, _ := self.GetInt("source", -1)
 
 	//获取分组
 	sourceList := sourceLists()
@@ -65,6 +80,10 @@ func (self *ApiController) Table() {
 		filters = append(filters, "status", status)
 	} else {
 		filters = append(filters, "status__in", []int{0, 1, 2, 3, 4})
+	}
+
+	if source != -1 {
+		filters = append(filters, "source_id", source)
 	}
 
 	if apiName != "" {
@@ -79,7 +98,7 @@ func (self *ApiController) Table() {
 		row["api_url"] = v.ApiUrl
 		row["status_text"] = AUDIT_STATUS[v.Status]
 		row["status"] = v.Status
-		row["method"] = REQUEST_METHOD[v.Method]
+		row["method"] = REQUEST_METHOD_DISPLAY[v.Method]
 		sourceInfo := getSourceInfo(sourceList, v.SourceId)
 		row["source_name"] = sourceInfo.SourceName
 		row["create_time"] = beego.Date(time.Unix(v.CreateTime, 0), "Y-m-d H:i:s")
@@ -257,9 +276,9 @@ func (self *ApiController) AjaxSave() {
 
 	ApiDetail.UpdateId = self.userId
 	ApiDetail.UpdateTime = time.Now().Unix()
-	ApiDetail.Status, _ = self.GetInt("status")
+	//ApiDetail.Status, _ = self.GetInt("status")
 
-	ApiDetail.Status = 1
+	//ApiDetail.Status = 1 //修改时不改变接口的状态
 	if err := ApiDetail.Update(); err != nil {
 		self.ajaxMsg(err.Error(), MSG_ERR)
 	}

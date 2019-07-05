@@ -128,7 +128,7 @@ func (a *ApiDetail) Update(fields ...string) error {
 
 func ApiChangeStatus(ids string, status int) (num int64, err error) {
 
-	sql := "UPDATE pp_api_detail set status=? where id in (" + ids + ")"
+	sql := "UPDATE pp_api_detail set status=?,audit_time=UNIX_TIMESTAMP() where id in (" + ids + ")"
 	res, err := orm.NewOrm().Raw(sql, status).Exec()
 	num = 0
 	if err == nil {

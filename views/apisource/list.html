@@ -7,7 +7,7 @@
             <form class="layui-form" action="" onsubmit="javascript:return false;">
                 <div class="demoTable">
                     <div class="layui-inline" style="width: 40%">
-                        <input class="layui-input" name="sourceName" id="sourceName" autocomplete="off" placeholder="资源名称" >
+                        <input class="layui-input" name="sourceName" id="sourceName" autocomplete="off" placeholder="分类名称" >
                     </div>
                     <button class="layui-btn" data-type="reload">查询</button>
                 </div>
@@ -35,7 +35,7 @@
             ,cols: [[
                 // {checkbox: true, fixed: true},
                 {field:'id', title: 'ID', align:'center',sort: true, width:150}
-                ,{field:'source_name',title: '资源名称'}
+                ,{field:'source_name',title: '分类名称'}
                 ,{field:'group_name',title: '所属分组'}
                 ,{field:'create_time', title: '创建时间'}
                 ,{field:'update_time', title: '修改时间'}
@@ -62,7 +62,7 @@
             type: 2,
             shade: 0.3,
             id:1,
-            title:"新增资源",
+            title:"新增分类",
             content: '/apisource/add',
             area:['500px','300px'],
             cancel:function(){
@@ -78,7 +78,7 @@
         if(obj.event === 'detail'){
             //layer.msg('ID：'+ data.id + ' 的查看操作');
         } else if(obj.event === 'del'){
-            layer.confirm('真的删除【'+data.source_name+'】资源么', function(index){
+            layer.confirm('真的删除【'+data.source_name+'】分类吗', function(index){
             var jsData = {'id':data.id}
             $.post('{{urlfor "ApiSourceController.AjaxDel"}}', jsData, function (out) {
                 if (out.status == 0) {
