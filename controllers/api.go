@@ -244,6 +244,38 @@ func (self *ApiController) Edit() {
 	self.display()
 }
 
+//复制接口实例
+func (self *ApiController) Copy() {
+	self.Data["ApiCss"] = true
+	id, _ := self.GetInt("id", 0)
+	detail, _ := models.ApiFullDetailById(id)
+	row := make(map[string]interface{})
+	row["id"] = detail.Id
+	row["source_id"] = detail.SourceId
+	row["api_url"] = detail.ApiUrl
+	row["api_name"] = detail.ApiName
+	row["detail"] = detail.Detail
+	row["status"] = detail.Status
+	row["create_name"] = detail.CreateName
+	row["update_name"] = detail.UpdateName
+	row["audit_name"] = detail.AuditName
+	row["audit_status"] = AUDIT_STATUS[detail.Status]
+	row["method"] = detail.Method
+	row["audit_time"] = beego.Date(time.Unix(detail.AuditTime, 0), "Y-m-d H:i:s")
+	row["update_time"] = beego.Date(time.Unix(detail.UpdateTime, 0), "Y-m-d H:i:s")
+
+	self.Data["pageTitle"] = "查看 " + detail.ApiName
+	self.Data["Detail"] = row
+
+	sourceList := sourceLists()
+	self.Data["sourceList"] = sourceList
+
+	tmplates := templateLists()
+	self.Data["templates"] = tmplates
+
+	self.display()
+}
+
 func (self *ApiController) AjaxSave() {
 
 	Api_id, _ := self.GetInt("id")

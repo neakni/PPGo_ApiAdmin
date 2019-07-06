@@ -45,6 +45,7 @@
         <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">详细</a>
         <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
         <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="audit">审核</a>
+        <a class="layui-btn layui-btn-xs" lay-event="copy">复制</a>
         <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">启|停</a>
 
     </script>
@@ -188,6 +189,8 @@
                 
             }else if(obj.event === 'detail'){
                 window.location.href="/api/detail?id="+data.id
+            }else if(obj.event === 'copy'){
+                window.location.href="/api/copy?id="+data.id
             }else if(obj.event === 'audit'){
                 window.location.href="/api/audit?id="+data.id
             }else{
